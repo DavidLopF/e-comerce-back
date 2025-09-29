@@ -8,9 +8,15 @@ async function bootstrap() {
 
   // Configurar CORS
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:7008'],
+    origin: [
+      'http://localhost:3000', 
+      'http://localhost:7008',
+      'https://e-comerce-frontend.vercel.app', // Agrega tu dominio de frontend aquí
+      'https://e-comerce-frontend.netlify.app', // O cualquier otro dominio de frontend
+      process.env.FRONTEND_URL // Variable de entorno para el frontend
+    ].filter(Boolean), // Filtra valores undefined
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
     credentials: true,
   });
 
