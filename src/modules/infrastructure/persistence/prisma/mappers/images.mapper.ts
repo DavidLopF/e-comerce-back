@@ -1,5 +1,5 @@
 import { Prisma, Images as PrismaImages } from '@prisma/client';
-import { Images } from '../../../../domain/images/entities/images.entity';
+import { Images } from '../../../../domain/products/entities/images.entity';
 
 
 export const ImagesMapper = {
