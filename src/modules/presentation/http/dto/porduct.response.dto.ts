@@ -7,6 +7,7 @@ export class ProductResponseDTO {
   priceCents!: number;
   imageUrl!: string | null;
   active!: boolean;
+  discount!: number;
 
   static fromDomain(p: Product): ProductResponseDTO {
     const dto = new ProductResponseDTO();
@@ -16,6 +17,7 @@ export class ProductResponseDTO {
     dto.priceCents = p.priceCents;
     dto.imageUrl = p.imageUrl ?? null;
     dto.active = p.active;
+    dto.discount = p.discount;
     return dto;
   }
 }

@@ -10,6 +10,7 @@ export const ProductMapper = {
       priceCents: row.priceCents,
       imageUrl: row.imageUrl ?? null,
       active: row.active,
+      discount: row.discount ?? 0,
       tenantId: (row as any).tenantId,
     });
   },

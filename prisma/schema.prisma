@@ -18,6 +18,7 @@ model Product {
   id         String   @id @default(cuid())
   name       String
   slug       String   @unique
+  discount   Int?     @default(0) 
   priceCents Int
   imageUrl   String?
   active     Boolean  @default(true)
@@ -29,4 +30,6 @@ model Images {
   url        String
   type       String
 }
+
+
 

@@ -6,12 +6,13 @@ export class Product {
       public priceCents: number,
       public imageUrl: string | null = null,
       public active: boolean = true,
+      public discount: number = 0,
       public readonly tenantId?: string, // quítalo si no usas tenancy
     ) {}
   
     static create(props: {
       id: string; name: string; slug: string; priceCents: number;
-      imageUrl?: string | null; active?: boolean; tenantId?: string;
+      imageUrl?: string | null; active?: boolean; discount?: number; tenantId?: string;
     }) {
       if (!props.name?.trim()) throw new Error("Nombre requerido");
       if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(props.slug)) throw new Error("Slug inválido");
@@ -24,6 +25,7 @@ export class Product {
         props.priceCents,
         props.imageUrl ?? null,
         props.active ?? true,
+        props.discount ?? 0,
         props.tenantId,
       );
     }
@@ -43,7 +45,7 @@ export class Product {
       return {
         id: this.id, name: this.name, slug: this.slug,
         priceCents: this.priceCents, imageUrl: this.imageUrl,
-        active: this.active, tenantId: this.tenantId,
+        active: this.active, discount: this.discount, tenantId: this.tenantId,
       };
     }
   }
