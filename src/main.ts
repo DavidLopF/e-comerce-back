@@ -11,8 +11,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:3000', 
       'http://localhost:7008',
-      'https://e-comerce-frontend.vercel.app', // Agrega tu dominio de frontend aquí
-      'https://e-comerce-frontend.netlify.app', // O cualquier otro dominio de frontend
+      'https://front-e-comerce-seven.vercel.app', // Tu frontend en Vercel
       process.env.FRONTEND_URL // Variable de entorno para el frontend
     ].filter(Boolean), // Filtra valores undefined
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
