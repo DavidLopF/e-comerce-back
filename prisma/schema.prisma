@@ -14,22 +14,286 @@ datasource db {
 }
 
 
-model Product {
-  id         String   @id @default(cuid())
-  name       String
-  slug       String   @unique
-  discount   Int?     @default(0) 
-  priceCents Int
-  imageUrl   String?
-  active     Boolean  @default(true)
-  createdAt  DateTime @default(now())
+// ===== TABLA PRINCIPAL DE TIENDAS =====
+model Store {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique  // Para URLs amigables
+  domain      String?  @unique  // Dominio personalizado (opcional)
+  
+  // Información básica de la tienda
+  description String?
+  slogan      String?
+  logo        String?  // URL del logo
+  favicon     String?  // URL del favicon
+  
+  // Contacto
+  email       String?
+  phone       String?
+  
+  // Estado
+  isActive    Boolean  @default(true)
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relaciones
+  config      StoreConfig?
+  products    Product[]
+  heroSlides  HeroSlide[]
+  menuItems   MenuItem[]
+  socialMedia SocialMedia[]
+  shippingMethods ShippingMethod[]
+  paymentMethods PaymentMethod[]
+  admins      StoreAdmin[]
+  
+  @@map("stores")
 }
 
+// ===== PRODUCTOS (MODIFICADO) =====
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String
+  discount    Int?     @default(0) 
+  priceCents  Int
+  imageUrl    String?
+  active      Boolean  @default(true)
+  
+  // Campos adicionales
+  description String?
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  
+  // Relación con Store
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Índice compuesto para slug único por tienda
+  @@unique([storeId, slug])
+  @@map("products")
+}
+
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  products    Product[]
+
+  @@map("categories")
+}
+
+// ===== CONFIGURACIÓN DE LA TIENDA =====
+model StoreConfig {
+  id          String   @id @default(cuid())
+  storeId     String   @unique
+  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  
+  // Configuración del tema (JSON)
+  theme       Json     // Colores, tipografías, etc.
+  
+  // Configuración de características
+  features    Json     // Qué funciones están habilitadas
+  
+  // SEO
+  seo         Json     // Meta tags, títulos, etc.
+  
+  // Configuración de checkout
+  checkout    Json     // Configuración de checkout
+  
+  // Versión y control
+  version     String   @default("1.0.0")
+  isActive    Boolean  @default(true)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("store_configs")
+}
+
+// ===== SLIDES DEL HERO/BANNER =====
+model HeroSlide {
+  id              String   @id @default(cuid())
+  storeId         String
+  store           Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  
+  // Contenido del slide
+  title           String
+  subtitle        String?
+  description     String?
+  imageUrl        String
+  imageUrlMobile  String? // Imagen específica para móviles
+  
+  // CTAs (Call to Actions)
+  ctaText         String?
+  ctaLink         String?
+  ctaStyle        String   @default("primary") // primary, secondary, outline
+  
+  secondaryCtaText String?
+  secondaryCtaLink String?
+  secondaryCtaStyle String?
+  
+  // Configuración visual
+  alignment       String   @default("left") // left, center, right
+  backgroundColor String?
+  textColor       String?
+  overlay         Boolean  @default(false)
+  overlayOpacity  Float    @default(0.5)
+  
+  // Control
+  order           Int      @default(0)
+  isActive        Boolean  @default(true)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("hero_slides")
+}
+
+// ===== ELEMENTOS DEL MENÚ DE NAVEGACIÓN =====
+model MenuItem {
+  id          String   @id @default(cuid())
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  
+  label       String
+  href        String
+  icon        String?  // Icono opcional
+  badge       String?  // Badge opcional (ej: "Sale", "New")
+  
+  // Para submenús
+  parentId    String?
+  parent      MenuItem? @relation("MenuHierarchy", fields: [parentId], references: [id])
+  children    MenuItem[] @relation("MenuHierarchy")
+  
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("menu_items")
+}
+
+// ===== REDES SOCIALES =====
+model SocialMedia {
+  id          String   @id @default(cuid())
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  
+  platform    String   // facebook, instagram, twitter, etc.
+  url         String
+  
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([storeId, platform])
+  @@map("social_media")
+}
+
+// ===== MÉTODOS DE ENVÍO =====
+model ShippingMethod {
+  id            String   @id @default(cuid())
+  storeId       String
+  store         Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  
+  name          String
+  description   String?
+  priceCents    Int      @default(0) // Precio en centavos
+  estimatedDays String?  // "5-7 días", "1 día", etc.
+  
+  order         Int      @default(0)
+  isActive      Boolean  @default(true)
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@map("shipping_methods")
+}
+
+// ===== MÉTODOS DE PAGO =====
+model PaymentMethod {
+  id          String   @id @default(cuid())
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  
+  name        String
+  type        String   // card, paypal, transfer, cash, other
+  icon        String?  // URL del icono
+  description String?
+  
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("payment_methods")
+}
+
+// ===== ADMINISTRADORES DE TIENDA =====
+model StoreAdmin {
+  id        String   @id @default(cuid())
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  
+  email     String   @unique
+  name      String
+  role      String   @default("admin") // admin, editor, viewer
+  
+  // Auth (puedes usar tu sistema de auth preferido)
+  passwordHash String?
+  
+  isActive  Boolean  @default(true)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("store_admins")
+}
+
+// ===== CONFIGURACIONES TEMPLATE =====
+model ConfigTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  
+  // Configuración por defecto
+  theme       Json
+  features    Json
+  seo         Json
+  checkout    Json
+  
+  // Metadatos
+  category    String?  // electronics, fashion, food, etc.
+  isPublic    Boolean  @default(false)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("config_templates")
+}
+
+// ===== IMÁGENES (EXISTENTE - MANTENIDO) =====
 model Images {
   id         String   @id @default(cuid())
   url        String
   type       String
+  
+  @@map("images")
 }
+
 
 
 

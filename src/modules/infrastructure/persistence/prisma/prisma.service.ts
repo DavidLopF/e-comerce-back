@@ -16,13 +16,6 @@ export class PrismaService
       errorFormat: 'pretty',
     });
 
-    // --- Singleton seguro en dev (hot-reload) ---
-    // Evita múltiples conexiones cuando Nest se recompila en watch mode.
-    const g = global as any;
-    if (!g.__PRISMA__) {
-      g.__PRISMA__ = this;
-    }
-    return g.__PRISMA__;
   }
 
   async onModuleInit() {

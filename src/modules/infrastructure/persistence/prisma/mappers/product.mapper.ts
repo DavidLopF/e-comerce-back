@@ -15,7 +15,7 @@ export const ProductMapper = {
     });
   },
 
-  toPrismaCreate(entity: Product): Prisma.ProductUncheckedCreateInput {
+  toPrismaCreate(entity: Product, storeId: string): Prisma.ProductUncheckedCreateInput {
     const p = entity.toPrimitives();
     return {
       id: p.id,
@@ -24,7 +24,9 @@ export const ProductMapper = {
       priceCents: p.priceCents,
       imageUrl: p.imageUrl,
       active: p.active,
-      // tenantId: p.tenantId, // si aplica
+      discount: p.discount || 0,
+      storeId: storeId,
+      // categoryId se puede agregar después si es necesario
     };
   },
 
