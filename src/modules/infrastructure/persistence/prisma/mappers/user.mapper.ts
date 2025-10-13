@@ -10,6 +10,7 @@ export const UserMapper = {
       row.isActive,
       row.createdAt,
       row.updatedAt,
+      row.firebaseUid || undefined,
     );
   },
 
@@ -18,6 +19,7 @@ export const UserMapper = {
       email: entity.email,
       name: entity.name,
       isActive: entity.isActive,
+      firebaseUid: entity.firebaseUid,
     };
   },
 
@@ -26,6 +28,7 @@ export const UserMapper = {
       email: entity.email,
       name: entity.name,
       isActive: entity.isActive,
+      firebaseUid: entity.firebaseUid,
     };
   },
 };

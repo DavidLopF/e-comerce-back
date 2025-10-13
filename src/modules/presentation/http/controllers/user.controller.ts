@@ -23,7 +23,8 @@ export class UserController {
         description: 'Datos de entrada inválidos' 
     })
     async createUser(@Body() user: CreateUserDto) {
-        return this.userService.createUser(User.create(user.email, user.name, user.deliveryAddress, user.phone));
+        const store = user.storeId || null;
+        return this.userService.createUser(User.create(user.email, user.name, user.firebaseUid), store);
     }
 
     @Get(':id')
@@ -44,6 +45,18 @@ export class UserController {
     })
     async getUserById(@Param('id') id: string) {
         return this.userService.getUserById(id);
+    }
+
+
+    @Get('validate-profile-complete/:email')
+    @ApiOperation({ summary: 'Validar si el perfil del usuario está completo' })
+    @ApiParam({ 
+        name: 'email', 
+        description: 'Email del usuario',
+        example: 'usuario@ejemplo.com'
+    })
+    async validateProfileComplete(@Param('email') email: string) {
+        return this.userService.validateProfileComplete(email);
     }
 
 }

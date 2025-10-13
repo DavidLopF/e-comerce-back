@@ -6,13 +6,13 @@ export class User {
     public readonly isActive: boolean,
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
+    public readonly firebaseUid?: string,
   ) {}
 
   static create(
     email: string,
     name: string,
-    deliveryAddress: string,
-    phone: string,
+    firebaseUid?: string,
     isActive: boolean = true,
   ): User {
     const now = new Date();
@@ -23,6 +23,7 @@ export class User {
       isActive,
       now,
       now,
+      firebaseUid,
     );
   }
 
@@ -34,6 +35,7 @@ export class User {
       this.isActive,
       this.createdAt,
       new Date(),
+      this.firebaseUid,
     );
   }
 
@@ -45,6 +47,7 @@ export class User {
       this.isActive,
       this.createdAt,
       new Date(),
+      this.firebaseUid,
     );
   }
 
@@ -56,6 +59,7 @@ export class User {
       true,
       this.createdAt,
       new Date(),
+      this.firebaseUid,
     );
   }
 
@@ -67,6 +71,7 @@ export class User {
       false,
       this.createdAt,
       new Date(),
+      this.firebaseUid,
     );
   }
 }

@@ -14,26 +14,16 @@ export class CreateUserDto {
     name: string;
 
     @ApiProperty({ 
-        description: 'Dirección de entrega',
-        example: 'Calle 123 #45-67, Bogotá'
+        description: 'ID de Firebase del usuario',
+        example: 'kw1b0OkXY4VMwCNrJFNJ7pKAj3r1',
+        required: false
     })
-    deliveryAddress: string;
+    firebaseUid?: string;
 
     @ApiProperty({ 
-        description: 'Número de teléfono',
-        example: '+57 300 123 4567'
+        description: 'ID de la tienda asociada al usuario',
+        example: 'store123456',
+        required: false
     })
-    phone: string;
-
-    @ApiProperty({ 
-        description: 'firebaseUid del usuario',
-        example: '123e4567-e89b-12d3-a456-426614174000'
-    })
-    firebaseUid: string;
-
-    @ApiProperty({ 
-        description: 'id de la tienda',
-        example: '123e4567-e89b-12d3-a456-426614174000'
-    })
-    storeId: string;
+    storeId?: string;
 }

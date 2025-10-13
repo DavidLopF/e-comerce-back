@@ -1,5 +1,4 @@
 import { PrismaService } from "../prisma.service";
-import { Images, ImagesMapper } from "../../../../domain/products/entities/images.entity";
 import type { StoreConfigData, CommonRepository } from "../../../../domain/products/ports/common.repository";
 import { Injectable } from "@nestjs/common";
 
@@ -8,16 +7,19 @@ export class  CommonPrismaRepository implements CommonRepository {
 
     constructor(private readonly prisma: PrismaService) {}
 
-    public async getHeroSlides(): Promise<Images[]> {
+    public async getHeroSlides(): Promise<any[]> {
         try {
-        const slides = await this.prisma.images.findMany({
+        const slides = await this.prisma.heroSlide.findMany({
             where: {
-                type: 'hero'
+                isActive: true
+            },
+            orderBy: {
+                order: 'asc'
             }
         });
-        return slides.map(ImagesMapper.toDomain);
+        return slides;
     } catch (error) {
-        throw new Error('Error al obtener las imágenes de la galería');
+        throw new Error('Error al obtener los slides del hero');
     }
 
     }
