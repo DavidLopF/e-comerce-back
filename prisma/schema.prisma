@@ -218,15 +218,15 @@ model User {
 }
 
 model Payment {
-  id          String   @id @default(cuid())
-  name        String
-  type        String
-  icon        String?
-  description String?
-  order       Int      @default(0)
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(cuid())
+  name          String
+  paymentMethod String
+  description   String?
+  order         Int      @default(0)
+  isActive      Boolean  @default(true)
+  completed    Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   productPayments ProductPayment[]
 
