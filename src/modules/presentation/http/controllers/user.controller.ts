@@ -20,6 +20,7 @@ import { UserService } from 'src/modules/application/users/user.service';
 import { User } from 'src/modules/domain/products/entities/user.entity';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { FirebaseAuthGuard } from 'src/common/guards/firebase-auth.guard';
+import { AdminGuard } from 'src/common/guards/admin.guard';
 
 @ApiTags('users')
 @Controller('users')
@@ -138,5 +139,27 @@ export class UserController {
     } catch (error) {
       throw error;
     }
+  }
+
+
+  @Get('store/:storeId')
+  @UseGuards(AdminGuard)
+  @ApiOperation({ summary: 'Obtener usuarios por tienda (Solo Admins)' })
+  @ApiParam({
+    name: 'storeId',
+    description: 'ID de la tienda',
+    example: 'cm1234567890abcdef',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de usuarios de la tienda',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Acceso denegado - Se requieren privilegios de administrador',
+  })
+  async getUserByStoreId(@Param('storeId') storeId: string) {
+    // Por ahora retornamos un ejemplo, implementa el método en UserService
+    return { message: `Users from store ${storeId}`, storeId };
   }
 }

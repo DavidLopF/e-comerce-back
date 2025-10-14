@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { PrismaModule } from "./modules/infrastructure/persistence/prisma/prisma.module";
+import { AuthorizationModule } from "./modules/authorization/authorization.module";
 import { ProductsController } from "./modules/presentation/http/controllers/product.controller";
 import { CommonController } from "./modules/presentation/http/controllers/common.controller";
 import { PaymentsController } from "./modules/presentation/http/controllers/payments.controller";
@@ -24,7 +25,8 @@ import { StorePrismaRepository } from "./modules/infrastructure/persistence/pris
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    PrismaModule
+    PrismaModule,
+    AuthorizationModule
   ],
   controllers: [ProductsController, CommonController, PaymentsController, UserController],
   providers: [
