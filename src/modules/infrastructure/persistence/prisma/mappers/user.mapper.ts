@@ -11,6 +11,8 @@ export const UserMapper = {
       row.createdAt,
       row.updatedAt,
       row.firebaseUid || undefined,
+      row.phone || undefined,
+      row.address || undefined
     );
   },
 
@@ -20,6 +22,8 @@ export const UserMapper = {
       name: entity.name,
       isActive: entity.isActive,
       firebaseUid: entity.firebaseUid,
+      phone: entity.phone,
+      address: entity.address
     };
   },
 

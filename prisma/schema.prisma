@@ -13,80 +13,77 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 // ===== TABLA PRINCIPAL DE TIENDAS =====
 model Store {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique  // Para URLs amigables
-  domain      String?  @unique  // Dominio personalizado (opcional)
-  
+  id     String  @id @default(cuid())
+  name   String
+  slug   String  @unique // Para URLs amigables
+  domain String? @unique // Dominio personalizado (opcional)
+
   // Información básica de la tienda
   description String?
   slogan      String?
-  logo        String?  // URL del logo
-  favicon     String?  // URL del favicon
-  
+  logo        String? // URL del logo
+  favicon     String? // URL del favicon
+
   // Contacto
-  email       String?
-  phone       String?
-  
+  email String?
+  phone String?
+
   // Estado
-  isActive    Boolean  @default(true)
-  
+  isActive Boolean @default(true)
+
   // Timestamps
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Relaciones
   config      StoreConfig?
   products    Product[]
   heroSlides  HeroSlide[]
   socialMedia SocialMedia[]
 
-  
-  userRoles   UserRole[]
-  
+  userRoles UserRole[]
+
   @@map("stores")
 }
 
 // ===== PRODUCTOS (MODIFICADO) =====
 model Product {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String
-  discount    Int?     @default(0) 
-  priceCents  Int
-  imageUrl    String?
-  active      Boolean  @default(true)
-  
+  id         String  @id @default(cuid())
+  name       String
+  slug       String
+  discount   Int?    @default(0)
+  priceCents Int
+  imageUrl   String?
+  active     Boolean @default(true)
+
   // Campos adicionales
   description String?
   categoryId  String?
   category    Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  
+
   // Relación con Store
-  storeId     String
-  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  storeId String
+  store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   productPayments ProductPayment[]
-  
+
   // Índice compuesto para slug único por tienda
   @@unique([storeId, slug])
   @@map("products")
 }
 
-
 model Category {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   name        String
   description String?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   products    Product[]
 
   @@map("categories")
@@ -94,100 +91,97 @@ model Category {
 
 // ===== CONFIGURACIÓN DE LA TIENDA =====
 model StoreConfig {
-  id          String   @id @default(cuid())
-  storeId     String   @unique
-  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  
+  id      String @id @default(cuid())
+  storeId String @unique
+  store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
   // Configuración del tema (JSON)
-  theme       Json     // Colores, tipografías, etc.
-  
+  theme Json // Colores, tipografías, etc.
+
   // Configuración de características
-  features    Json     // Qué funciones están habilitadas
-  
+  features Json // Qué funciones están habilitadas
+
   // SEO
-  seo         Json     // Meta tags, títulos, etc.
-  
+  seo Json // Meta tags, títulos, etc.
+
   // Configuración de checkout
-  checkout    Json     // Configuración de checkout
-  
+  checkout Json // Configuración de checkout
+
   // Versión y control
-  version     String   @default("1.0.0")
-  isActive    Boolean  @default(true)
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+  version  String  @default("1.0.0")
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@map("store_configs")
 }
 
 // ===== SLIDES DEL HERO/BANNER =====
 model HeroSlide {
-  id              String   @id @default(cuid())
-  storeId         String
-  store           Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  
+  id      String @id @default(cuid())
+  storeId String
+  store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
   // Contenido del slide
-  title           String
-  subtitle        String?
-  description     String?
-  imageUrl        String
-  imageUrlMobile  String? // Imagen específica para móviles
-  
+  title          String
+  subtitle       String?
+  description    String?
+  imageUrl       String
+  imageUrlMobile String? // Imagen específica para móviles
+
   // CTAs (Call to Actions)
-  ctaText         String?
-  ctaLink         String?
-  ctaStyle        String   @default("primary") // primary, secondary, outline
-  
-  secondaryCtaText String?
-  secondaryCtaLink String?
+  ctaText  String?
+  ctaLink  String?
+  ctaStyle String  @default("primary") // primary, secondary, outline
+
+  secondaryCtaText  String?
+  secondaryCtaLink  String?
   secondaryCtaStyle String?
-  
+
   // Configuración visual
-  alignment       String   @default("left") // left, center, right
+  alignment       String  @default("left") // left, center, right
   backgroundColor String?
   textColor       String?
-  overlay         Boolean  @default(false)
-  overlayOpacity  Float    @default(0.5)
-  
+  overlay         Boolean @default(false)
+  overlayOpacity  Float   @default(0.5)
+
   // Control
-  order           Int      @default(0)
-  isActive        Boolean  @default(true)
-  
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  
+  order    Int     @default(0)
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@map("hero_slides")
 }
 
-
-
 // ===== REDES SOCIALES =====
 model SocialMedia {
-  id          String   @id @default(cuid())
-  storeId     String
-  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  
-  platform    String   // facebook, instagram, twitter, etc.
-  url         String
-  
-  order       Int      @default(0)
-  isActive    Boolean  @default(true)
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+  id      String @id @default(cuid())
+  storeId String
+  store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  platform String // facebook, instagram, twitter, etc.
+  url      String
+
+  order    Int     @default(0)
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@unique([storeId, platform])
   @@map("social_media")
 }
 
-
-model Roles{
-  id        String   @id @default(cuid())
-  name      String
+model Roles {
+  id          String   @id @default(cuid())
+  name        String
   description String?
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   userRoles UserRole[]
 
@@ -195,40 +189,39 @@ model Roles{
 }
 
 model UserRole {
-  id        String   @id @default(cuid())
-  userId    String
-  storeId   String
-  roleId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role      Roles    @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  id      String @id @default(cuid())
+  userId  String
+  storeId String
+  roleId  String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role    Roles  @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  store   Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
 
   @@map("user_roles")
-
 }
 
-
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
+  id      String  @id @default(cuid())
+  email   String  @unique
+  name    String
+  phone   String?
+  address String?
 
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   firebaseUid String?
-
 
   userRoles UserRole[]
 
   @@map("users")
 }
 
-model Payment{
-  id        String   @id @default(cuid())
-  name      String
-  type      String
-  icon      String?
+model Payment {
+  id          String   @id @default(cuid())
+  name        String
+  type        String
+  icon        String?
   description String?
   order       Int      @default(0)
   isActive    Boolean  @default(true)
@@ -240,13 +233,10 @@ model Payment{
   @@map("payments")
 }
 
-
-model ProductPayment{
-  id        String   @id @default(cuid())
+model ProductPayment {
+  id        String  @id @default(cuid())
   productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   paymentId String
-  payment   Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  payment   Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
 }
-
-
