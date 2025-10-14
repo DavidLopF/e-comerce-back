@@ -1,4 +1,4 @@
-import { UserRoleRepository } from 'src/modules/domain/products/ports/role.repository';
+import { UserRoleRepository } from 'src/modules/domain/store/ports/role.repository';
 import { PrismaService } from '../prisma.service';
 import { Injectable } from '@nestjs/common';
 

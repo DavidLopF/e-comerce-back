@@ -17,7 +17,7 @@ import {
   ApiParam,
 } from '@nestjs/swagger';
 import { UserService } from 'src/modules/application/users/user.service';
-import { User } from 'src/modules/domain/products/entities/user.entity';
+import { User } from 'src/modules/domain/users/entities/user.entity';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { FirebaseAuthGuard } from 'src/common/guards/firebase-auth.guard';
 import { AdminGuard } from 'src/common/guards/admin.guard';
@@ -158,8 +158,7 @@ export class UserController {
     status: 403,
     description: 'Acceso denegado - Se requieren privilegios de administrador',
   })
-  async getUserByStoreId(@Param('storeId') storeId: string) {
-    // Por ahora retornamos un ejemplo, implementa el método en UserService
-    return { message: `Users from store ${storeId}`, storeId };
+  async getUsersByStoreId(@Param('storeId') storeId: string) {
+
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Payment } from 'mercadopago';
-import { PaymentsRepository } from 'src/modules/domain/products/ports/payments.repository';
+import { PaymentsRepository } from 'src/modules/domain/payments/ports/payments.repository';
 
 @Injectable()
 export class PaymentsPrismaRepository implements PaymentsRepository {

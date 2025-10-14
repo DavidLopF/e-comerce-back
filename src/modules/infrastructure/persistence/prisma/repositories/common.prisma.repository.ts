@@ -1,5 +1,5 @@
 import { PrismaService } from "../prisma.service";
-import type { StoreConfigData, CommonRepository } from "../../../../domain/products/ports/common.repository";
+import type { StoreConfigData, CommonRepository } from "../../../../domain/store/ports/common.repository";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()

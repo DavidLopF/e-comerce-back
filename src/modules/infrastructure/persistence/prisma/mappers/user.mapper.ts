@@ -1,5 +1,5 @@
 import { Prisma, User as PrismaUser } from "@prisma/client";
-import { User } from "../../../../domain/products/entities/user.entity";
+import { User } from "../../../../domain/users/entities/user.entity";
 
 export const UserMapper = {
   toDomain(row: PrismaUser): User {

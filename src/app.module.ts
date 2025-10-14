@@ -12,8 +12,8 @@ import { PaymentsService } from "./modules/application/payments/payments.service
 import { UserService } from "./modules/application/users/user.service";
 import { MercadoPagoService } from "./modules/application/payments/mercadopago.service";
 import { PRODUCT_REPOSITORY } from "./modules/domain/products/ports/product.repository";
-import { COMMON_REPOSITORY } from "./modules/domain/products/ports/common.repository";
-import { USER_REPOSITORY } from "./modules/domain/products/ports/user.repository";
+import { COMMON_REPOSITORY } from "./modules/domain/store/ports/common.repository";
+import { USER_REPOSITORY } from "./modules/domain/users/ports/user.repository";
 import { ProductsPrismaRepository } from "./modules/infrastructure/persistence/prisma/repositories/products.prisma.repository";
 import { CommonPrismaRepository } from "./modules/infrastructure/persistence/prisma/repositories/common.prisma.repository";
 import { UserPrismaRepository } from "./modules/infrastructure/persistence/prisma/repositories/user.repository";

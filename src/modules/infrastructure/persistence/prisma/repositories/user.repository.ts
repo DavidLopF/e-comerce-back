@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { UserRepository } from 'src/modules/domain/products/ports/user.repository';
+import { UserRepository } from 'src/modules/domain/users/ports/user.repository';
 import { PrismaService } from '../prisma.service';
-import { User } from 'src/modules/domain/products/entities/user.entity';
+import { User } from 'src/modules/domain/users/entities/user.entity';
 import { UserMapper } from '../mappers/user.mapper';
 import { UserRole } from '@prisma/client';
-import { Role } from 'src/modules/domain/products/entities/roles.entity';
+import { Role } from 'src/modules/domain/users/entities/roles.entity';
 
 @Injectable()
 export class UserPrismaRepository implements UserRepository {

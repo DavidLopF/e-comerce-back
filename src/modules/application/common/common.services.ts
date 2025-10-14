@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/modules/infrastructure/persistence/prisma/prisma.service';
-import { COMMON_REPOSITORY } from 'src/modules/domain/products/ports/common.repository';
-import type { CommonRepository } from 'src/modules/domain/products/ports/common.repository';
+import { COMMON_REPOSITORY } from 'src/modules/domain/store/ports/common.repository';
+import type { CommonRepository } from 'src/modules/domain/store/ports/common.repository';
 import type { StoreConfigResponseDto } from 'src/modules/presentation/http/dto/store-config.response.dto';
 
 @Injectable()
