@@ -9,13 +9,10 @@ export class PrismaService
 {
   constructor() {
     super({
-      // Opcional: logging útil en dev
-      log: process.env.NODE_ENV === 'development'
-        ? ['query', 'info', 'warn', 'error']
-        : ['warn', 'error'],
+      // Logs desactivados para reducir ruido
+      log: ['error'], // Solo errores
       errorFormat: 'pretty',
     });
-
   }
 
   async onModuleInit() {

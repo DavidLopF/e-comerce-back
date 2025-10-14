@@ -42,11 +42,10 @@ model Store {
   config      StoreConfig?
   products    Product[]
   heroSlides  HeroSlide[]
-  menuItems   MenuItem[]
   socialMedia SocialMedia[]
-  shippingMethods ShippingMethod[]
-  paymentMethods PaymentMethod[]
-  admins      StoreAdmin[]
+
+  
+  userRoles   UserRole[]
   
   @@map("stores")
 }
@@ -72,6 +71,8 @@ model Product {
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  productPayments ProductPayment[]
   
   // Índice compuesto para slug único por tienda
   @@unique([storeId, slug])
@@ -158,30 +159,7 @@ model HeroSlide {
   @@map("hero_slides")
 }
 
-// ===== ELEMENTOS DEL MENÚ DE NAVEGACIÓN =====
-model MenuItem {
-  id          String   @id @default(cuid())
-  storeId     String
-  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  
-  label       String
-  href        String
-  icon        String?  // Icono opcional
-  badge       String?  // Badge opcional (ej: "Sale", "New")
-  
-  // Para submenús
-  parentId    String?
-  parent      MenuItem? @relation("MenuHierarchy", fields: [parentId], references: [id])
-  children    MenuItem[] @relation("MenuHierarchy")
-  
-  order       Int      @default(0)
-  isActive    Boolean  @default(true)
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  @@map("menu_items")
-}
+
 
 // ===== REDES SOCIALES =====
 model SocialMedia {
@@ -202,98 +180,73 @@ model SocialMedia {
   @@map("social_media")
 }
 
-// ===== MÉTODOS DE ENVÍO =====
-model ShippingMethod {
-  id            String   @id @default(cuid())
-  storeId       String
-  store         Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  
-  name          String
-  description   String?
-  priceCents    Int      @default(0) // Precio en centavos
-  estimatedDays String?  // "5-7 días", "1 día", etc.
-  
-  order         Int      @default(0)
-  isActive      Boolean  @default(true)
-  
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  
-  @@map("shipping_methods")
-}
 
-// ===== MÉTODOS DE PAGO =====
-model PaymentMethod {
-  id          String   @id @default(cuid())
-  storeId     String
-  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  
-  name        String
-  type        String   // card, paypal, transfer, cash, other
-  icon        String?  // URL del icono
-  description String?
-  
-  order       Int      @default(0)
-  isActive    Boolean  @default(true)
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  @@map("payment_methods")
-}
-
-// ===== ADMINISTRADORES DE TIENDA =====
-model StoreAdmin {
+model Roles{
   id        String   @id @default(cuid())
-  storeId   String
-  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  
-  email     String   @unique
   name      String
-  role      String   @default("admin") // admin, editor, viewer
-  
-  // Auth (puedes usar tu sistema de auth preferido)
-  passwordHash String?
-  
+  description String?
   isActive  Boolean  @default(true)
-  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
-  @@map("store_admins")
+
+  userRoles UserRole[]
+
+  @@map("roles")
 }
 
-// ===== CONFIGURACIONES TEMPLATE =====
-model ConfigTemplate {
-  id          String   @id @default(cuid())
-  name        String
+model UserRole {
+  id        String   @id @default(cuid())
+  userId    String
+  storeId   String
+  roleId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Roles    @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@map("user_roles")
+
+}
+
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  firebaseUid String?
+
+
+  userRoles UserRole[]
+
+  @@map("users")
+}
+
+model Payment{
+  id        String   @id @default(cuid())
+  name      String
+  type      String
+  icon      String?
   description String?
-  
-  // Configuración por defecto
-  theme       Json
-  features    Json
-  seo         Json
-  checkout    Json
-  
-  // Metadatos
-  category    String?  // electronics, fashion, food, etc.
-  isPublic    Boolean  @default(false)
-  
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  
-  @@map("config_templates")
-}
 
-// ===== IMÁGENES (EXISTENTE - MANTENIDO) =====
-model Images {
-  id         String   @id @default(cuid())
-  url        String
-  type       String
-  
-  @@map("images")
+  productPayments ProductPayment[]
+
+  @@map("payments")
 }
 
 
+model ProductPayment{
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  paymentId String
+  payment   Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+}
 
 

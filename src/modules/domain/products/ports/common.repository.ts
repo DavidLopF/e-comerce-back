@@ -1,5 +1,3 @@
-import { Images } from "../entities/images.entity";
-
 export interface StoreConfigData {
     store: any;
     config: any;
@@ -8,7 +6,7 @@ export interface StoreConfigData {
 }
 
 export interface CommonRepository {
-    getHeroSlides(): Promise<Images[]>;
+    getHeroSlides(): Promise<any[]>;
     getStoreConfig(storeSlug: string): Promise<StoreConfigData>;
 }
 
