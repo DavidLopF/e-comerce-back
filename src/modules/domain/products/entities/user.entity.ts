@@ -7,6 +7,8 @@ export class User {
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
     public readonly firebaseUid?: string,
+    public readonly phone?: string,
+    public readonly address?: string,
   ) {}
 
   static create(
@@ -14,6 +16,8 @@ export class User {
     name: string,
     firebaseUid?: string,
     isActive: boolean = true,
+    phone?: string,
+    address?: string,
   ): User {
     const now = new Date();
     return new User(
@@ -24,6 +28,9 @@ export class User {
       now,
       now,
       firebaseUid,
+      phone,
+      address
+
     );
   }
 

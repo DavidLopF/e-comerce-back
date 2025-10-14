@@ -26,4 +26,18 @@ export class CreateUserDto {
         required: false
     })
     storeId?: string;
+
+    @ApiProperty({
+        description: 'Número de teléfono del usuario',
+        example: '+34123456789',
+        required: false
+    })
+    phone?: string; 
+
+    @ApiProperty({  
+        description: 'Dirección del usuario',
+        example: 'Calle Falsa 123, Ciudad, País',
+        required: false
+    })
+    address?: string;
 }

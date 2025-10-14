@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from "@nestjs/swagger";
 import { PaymentsService } from "src/modules/application/payments/payments.service";
 import { CreatePreferencesDto } from "../dto/create-preferences.dto";
+import { FirebaseAuthGuard } from "src/common/guards/firebase-auth.guard";
 
 @ApiTags('payments')
 @Controller('payments')
@@ -10,6 +11,7 @@ export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
   @Post('create-preferences')
+  @UseGuards(FirebaseAuthGuard)
   @ApiOperation({ summary: 'Crear preferencias de pago en MercadoPago' })
   @ApiBody({ type: CreatePreferencesDto })
   @ApiResponse({ 

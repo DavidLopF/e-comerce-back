@@ -21,6 +21,12 @@ export class UserService {
     return this.userRepository.getUserById(id);
   }
 
+
+  async getUserByFirebaseUid(firebaseUid: string) {
+    console.log('Fetching user with Firebase UID:', firebaseUid);
+    return this.userRepository.getByFirebaseUid(firebaseUid);
+  }
+
   async createUser(user: User, storeId: string | null = null) {
     try {
       const existingUser = await this.userRepository.getUserByEmail(user.email);
@@ -31,10 +37,9 @@ export class UserService {
         return await this.userRepository.updateUser(updatedUser);
       }
 
-      // Usuario no existe, lo creamos nuevo
+
       const userCreated = await this.userRepository.createUser(user);
-      
-      // Solo creamos el rol cuando es un usuario completamente nuevo
+    
       if (storeId) {
         const store = await this.storeRepository.getBySlug(storeId);
         if (!store) {

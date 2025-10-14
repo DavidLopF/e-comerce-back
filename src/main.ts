@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import { PrismaService } from './modules/infrastructure/persistence/prisma/prisma.service';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import './common/config/firebase.config'; // Inicializar Firebase Admin
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
