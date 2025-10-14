@@ -26,7 +26,6 @@ export class  CommonPrismaRepository implements CommonRepository {
 
     public async getStoreConfig(storeSlug: string): Promise<StoreConfigData> {
         try {
-             console.log('store', storeSlug);
             const store = await this.prisma.store.findUnique({
                 where: {
                     slug: storeSlug,

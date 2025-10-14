@@ -10,6 +10,7 @@ export interface UserRepository {
     updateUser(user: User): Promise<User>;
     deleteUser(id: string): Promise<void>;
     getUserByEmail(email: string): Promise<User | null>;
-    validateProfileCompete(email: string): Promise<boolean>;
+    validateProfileComplete(email: string): Promise<boolean>;
     createUserRole(email: string, storeId: string, roleId: string): Promise<UserRole>;
+    userRoles(email: string, storeSlug: string): Promise<UserRole[]>;
 }

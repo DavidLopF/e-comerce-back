@@ -34,7 +34,5 @@ export class PaymentsController {
   }
     
 
-  // @Get('preferences/:id/status')
-  // async getPreferenceStatus(@Param('id') id: string) {
-  //   return this.paymentsService.getPaymentStatus(id);  }
+ 
 }

@@ -4,10 +4,41 @@ import { PrismaService } from '../prisma.service';
 import { User } from 'src/modules/domain/products/entities/user.entity';
 import { UserMapper } from '../mappers/user.mapper';
 import { UserRole } from '@prisma/client';
+import { Role } from 'src/modules/domain/products/entities/roles.entity';
 
 @Injectable()
 export class UserPrismaRepository implements UserRepository {
   constructor(private readonly prisma: PrismaService) {}
+  async validateProfileComplete(email: string): Promise<boolean> {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+    });
+    return !!user;
+  }
+
+  async userRoles(email: string, storeSlug: string): Promise<UserRole[]> {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+    });
+    if (!user) {
+      return [];
+    }
+    const store = await this.prisma.store.findUnique({
+      where: { slug: storeSlug },
+    });
+    if (!store) {
+      return [];
+    }
+    const roles = await this.prisma.userRole.findMany({
+      where: {
+        userId: user.id,
+        storeId: store.id,
+      },
+      include: { role: true },
+    });
+    return roles;
+  }
+
 
   async getByFirebaseUid(firebaseUid: string): Promise<User | null> {
     try {
@@ -16,7 +47,7 @@ export class UserPrismaRepository implements UserRepository {
           firebaseUid: firebaseUid,
         },
       });
-      console.log('Fetched user:', user);
+
       return user ? UserMapper.toDomain(user) : null;
     } catch (error) {
       throw new Error(error as any);

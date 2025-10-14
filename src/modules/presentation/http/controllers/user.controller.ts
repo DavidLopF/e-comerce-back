@@ -46,7 +46,14 @@ export class UserController {
     try {
       const store = user.storeId || null;
       return await this.userService.createUser(
-        User.create(user.email, user.name, user.firebaseUid, true, user.phone, user.address),
+        User.create(
+          user.email,
+          user.name,
+          user.firebaseUid,
+          true,
+          user.phone,
+          user.address,
+        ),
         store,
       );
     } catch (error) {
@@ -89,5 +96,47 @@ export class UserController {
   })
   async getUserById(@Param('id') id: string) {
     return this.userService.getUserByFirebaseUid(id);
+  }
+
+  @Get('permissions/:firebaeUid/:storeId')
+  @UseGuards(FirebaseAuthGuard)
+  @ApiOperation({ summary: 'Obtener permisos del usuario por Firebase UID' })
+  @ApiParam({
+    name: 'firebaeUid',
+    description: 'Firebase UID del usuario',
+    example: 'firebase-uid-123456',
+  })
+  @ApiParam({
+    name: 'storeId',
+    description: 'ID de la tienda',
+    example: 'store-123456',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Permisos obtenidos exitosamente',
+    schema: {
+      example: {
+        roles: ['admin-store', 'user-store', 'super-admin'],
+        permissions: ['create-product', 'edit-product', 'delete-product'],
+      },
+    },
+  })
+  async getUserPermissions(
+    @Param('firebaeUid') firebaeUid: string,
+    @Param('storeId') storeId: string,
+  ) {
+    try {
+      const user = await this.userService.getUserByFirebaseUid(firebaeUid);
+      if (!user) {
+        throw new NotFoundException('Usuario no encontrado');
+      }
+      const roles = await this.userService.getRoles(user.email, storeId);
+
+      return {
+        roles: roles 
+      };
+    } catch (error) {
+      throw error;
+    }
   }
 }
