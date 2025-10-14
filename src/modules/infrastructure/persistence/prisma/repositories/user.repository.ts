@@ -9,12 +9,56 @@ import { Role } from 'src/modules/domain/users/entities/roles.entity';
 @Injectable()
 export class UserPrismaRepository implements UserRepository {
   constructor(private readonly prisma: PrismaService) {}
-  async validateProfileComplete(email: string): Promise<boolean> {
-    const user = await this.prisma.user.findUnique({
-      where: { email },
+  async getUsersByStoreSlug(storeSlug: string, skip: number, limit: number): Promise<{ users: any[], total: number }> {
+    const store = await this.prisma.store.findUnique({
+      where: { slug: storeSlug },
     });
-    return !!user;
+    if (!store) {
+      return { users: [], total: 0 };
+    }
+    
+    // Obtener usuarios que tienen roles en esta tienda específica
+    const userRoles = await this.prisma.userRole.findMany({
+      where: { storeId: store.id },
+      skip: skip,
+      take: limit,
+      include: { 
+        user: true,
+        role: true,
+        store: true
+      },
+    });
+
+    // Contar total de usuarios en esta tienda
+    const total = await this.prisma.userRole.count({
+      where: { storeId: store.id },
+    });
+
+    // Mapear los usuarios y agregar información adicional necesaria para la tabla
+    const users = userRoles.map((userRole) => {
+      const user = userRole.user;
+      
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        isActive: user.isActive,
+        createdAt: user.createdAt,
+        firebaseUid: user.firebaseUid,
+        address: user.address,
+        totalOrders: 0, // Por ahora 0, implementar según tu lógica de negocio
+        totalSpent: 0, // Por ahora 0, implementar según tu lógica de negocio
+        userType: userRole.role.name === 'admin' || userRole.role.name === 'store_admin' ? 'Admin' : 'Regular'
+      };
+    });
+
+    return { users, total };
   }
+
+
+
+ 
 
   async userRoles(email: string, storeSlug: string): Promise<UserRole[]> {
     const user = await this.prisma.user.findUnique({
@@ -112,10 +156,50 @@ export class UserPrismaRepository implements UserRepository {
     return user ? UserMapper.toDomain(user) : null;
   }
 
-  async validateProfileCompete(email: string): Promise<boolean> {
+  async validateProfileComplete(email: string): Promise<boolean> {
     const user = await this.prisma.user.findUnique({
       where: { email },
     });
     return user ? true : false;
+  }
+
+  async getUsersByStoreId(storeId: string, skip: number, limit: number): Promise<{ users: any[], total: number }> {
+    // Obtener usuarios que tienen roles en esta tienda específica
+    const userRoles = await this.prisma.userRole.findMany({
+      where: { storeId },
+      skip: skip,
+      take: limit,
+      include: { 
+        user: true,
+        role: true,
+        store: true
+      },
+    });
+
+    // Contar total de usuarios en esta tienda
+    const total = await this.prisma.userRole.count({
+      where: { storeId },
+    });
+
+    // Mapear los usuarios y agregar información adicional necesaria para la tabla
+    const users = userRoles.map((userRole) => {
+      const user = userRole.user;
+      
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        isActive: user.isActive,
+        createdAt: user.createdAt,
+        firebaseUid: user.firebaseUid,
+        address: user.address,
+        totalOrders: 0, // Por ahora 0, implementar según tu lógica de negocio
+        totalSpent: 0, // Por ahora 0, implementar según tu lógica de negocio
+        userType: userRole.role.name === 'admin' || userRole.role.name === 'store_admin' ? 'Admin' : 'Regular'
+      };
+    });
+
+    return { users, total };
   }
 }

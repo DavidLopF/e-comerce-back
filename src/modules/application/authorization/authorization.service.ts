@@ -64,4 +64,28 @@ export class AuthorizationService {
 
     return await this.isStoreAdmin(email, storeId);
   }
+
+  async isAuthorizedBySlugOrId(email: string, storeSlug?: string, storeId?: string): Promise<boolean> {
+    const isSuperAdmin = await this.isSuperAdmin(email);
+    if (isSuperAdmin) return true;
+
+    // Si tenemos storeId, lo usamos directamente
+    if (storeId) {
+      return await this.isStoreAdmin(email, storeId);
+    }
+
+    // Si tenemos storeSlug, primero obtenemos el storeId
+    if (storeSlug) {
+      const store = await this.prisma.store.findUnique({
+        where: { slug: storeSlug }
+      });
+      
+      if (!store) return false;
+      
+      return await this.isStoreAdmin(email, store.id);
+    }
+
+    // Si no tenemos ni storeId ni storeSlug, verificamos si es admin de alguna tienda
+    return await this.isStoreAdmin(email);
+  }
 }

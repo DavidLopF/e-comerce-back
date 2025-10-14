@@ -72,4 +72,14 @@ export class UserService {
       user: user || null,
     };
   }
+
+  async getUsersByStoreSlug(storeSlug: string, page: number, limit: number) {
+    const skip = (page - 1) * limit;
+    return this.userRepository.getUsersByStoreSlug(storeSlug, skip, limit);
+  }
+
+  async getUsersByStoreId(storeId: string, page: number, limit: number) {
+    const skip = (page - 1) * limit;
+    return this.userRepository.getUsersByStoreId(storeId, skip, limit);
+  }
 }

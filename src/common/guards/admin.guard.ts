@@ -26,11 +26,12 @@ export class AdminGuard implements CanActivate {
         throw new ForbiddenException('Email not found in token');
       }
 
-      // Extraer storeId de los parámetros de la ruta o query si está disponible
+      // Extraer storeId o storeSlug de los parámetros de la ruta o query si está disponible
       const storeId = request.params.storeId || request.query.storeId;
+      const storeSlug = request.params.storeSlug || request.query.storeSlug;
 
-      // Verificar si el usuario es admin
-      const isAuthorized = await this.authorizationService.isAuthorized(userEmail, storeId);
+      // Verificar si el usuario es admin (puede ser por ID o por slug)
+      const isAuthorized = await this.authorizationService.isAuthorizedBySlugOrId(userEmail, storeSlug, storeId);
       
       if (!isAuthorized) {
         throw new ForbiddenException('Access denied. Admin privileges required');

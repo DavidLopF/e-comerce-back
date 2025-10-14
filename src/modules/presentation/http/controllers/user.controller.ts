@@ -27,6 +27,87 @@ import { AdminGuard } from 'src/common/guards/admin.guard';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Get('store/:storeId')
+  @UseGuards(AdminGuard)
+  @ApiOperation({ summary: 'Obtener usuarios por tienda (Solo Admins)' })
+  @ApiParam({
+    name: 'storeId',
+    description: 'ID de la tienda',
+    example: 'cm1234567890abcdef',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de usuarios de la tienda',
+    schema: {
+      example: {
+        users: [
+          {
+            id: 1,
+            name: 'Ana García',
+            email: 'ana.garcia@email.com',
+            phone: '+1 234 567 8901',
+            registrationDate: '14 de enero de 2023',
+            totalOrders: 12,
+            totalSpent: '1540.50 US$',
+            status: 'Activo',
+            userType: 'VIP',
+          },
+        ],
+        pagination: {
+          page: 1,
+          limit: 10,
+          total: 50,
+          totalPages: 5,
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Acceso denegado - Se requieren privilegios de administrador',
+  })
+  async getUsersByStoreId(
+    @Param('storeId') storeId: string,
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+  ) {
+    const pageNumber = parseInt(page) || 1;
+    const limitNumber = parseInt(limit) || 10;
+
+    const result = await this.userService.getUsersByStoreId(
+      storeId,
+      pageNumber,
+      limitNumber,
+    );
+
+    // Formatear los datos para la tabla
+    const formattedUsers = result.users.map((user) => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone || 'N/A',
+      registrationDate: new Date(user.createdAt).toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }),
+      totalOrders: user.totalOrders || 0,
+      totalSpent: user.totalSpent ? `${user.totalSpent} US$` : '0.00 US$',
+      status: user.isActive ? 'Activo' : 'Inactivo',
+      userType: user.userType || 'Regular',
+    }));
+
+    return {
+      users: formattedUsers,
+      pagination: {
+        page: pageNumber,
+        limit: limitNumber,
+        total: result.total,
+        totalPages: Math.ceil(result.total / limitNumber),
+      },
+    };
+  }
+
   @Post()
   @ApiOperation({ summary: 'Crear un nuevo usuario' })
   @ApiBody({ type: CreateUserDto })
@@ -134,31 +215,91 @@ export class UserController {
       const roles = await this.userService.getRoles(user.email, storeId);
 
       return {
-        roles: roles 
+        roles: roles,
       };
     } catch (error) {
       throw error;
     }
   }
 
-
-  @Get('store/:storeId')
+  @Get('store/:storeSlug')
   @UseGuards(AdminGuard)
   @ApiOperation({ summary: 'Obtener usuarios por tienda (Solo Admins)' })
   @ApiParam({
-    name: 'storeId',
-    description: 'ID de la tienda',
-    example: 'cm1234567890abcdef',
+    name: 'storeSlug',
+    description: 'Slug de la tienda',
+    example: 'mi-tienda',
   })
   @ApiResponse({
     status: 200,
     description: 'Lista de usuarios de la tienda',
+    schema: {
+      example: {
+        users: [
+          {
+            id: 1,
+            name: 'Ana García',
+            email: 'ana.garcia@email.com',
+            phone: '+1 234 567 8901',
+            registrationDate: '14 de enero de 2023',
+            totalOrders: 12,
+            totalSpent: '1540.50 US$',
+            status: 'Activo',
+            userType: 'VIP',
+          },
+        ],
+        pagination: {
+          page: 1,
+          limit: 10,
+          total: 50,
+          totalPages: 5,
+        },
+      },
+    },
   })
   @ApiResponse({
     status: 403,
     description: 'Acceso denegado - Se requieren privilegios de administrador',
   })
-  async getUsersByStoreId(@Param('storeId') storeId: string) {
+  async getUsersByStoreSlug(
+    @Param('storeSlug') storeSlug: string,
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+  ) {
+    const pageNumber = parseInt(page) || 1;
+    const limitNumber = parseInt(limit) || 10;
 
+    const result = await this.userService.getUsersByStoreSlug(
+      storeSlug,
+      pageNumber,
+      limitNumber,
+    );
+
+    // Formatear los datos para la tabla
+    const formattedUsers = result.users.map((user) => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone || 'N/A',
+      registrationDate: new Date(user.createdAt).toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }),
+      totalOrders: user.totalOrders || 0,
+      totalSpent: user.totalSpent ? `${user.totalSpent} US$` : '0.00 US$',
+      status: user.isActive ? 'Activo' : 'Inactivo',
+      userType: user.userType || 'Regular',
+    }));
+
+    return {
+      users: formattedUsers,
+      pagination: {
+        page: pageNumber,
+        limit: limitNumber,
+        total: result.total,
+        totalPages: Math.ceil(result.total / limitNumber),
+      },
+    };
   }
 }
