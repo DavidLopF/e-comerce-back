@@ -1,9 +1,9 @@
 import { Payment } from "@prisma/client";
+import { RegisterPaymentDto } from "src/modules/presentation/http/dto/register-payment.dto";
 
 export interface PaymentsRepository {
-    createPayments(): Promise<Payment>;
-    getAllPaymentsByStore(storeId: string): Promise<any[]>;
-    getActivePaymentsByStore(storeId: string): Promise<any[]>;
-    getPaymentById(id: string): Promise<any>;
+    registerPayment(paymentData: RegisterPaymentDto): Promise<any>;
 
 }
+
+export const PAYMENT_REPOSITORY = Symbol("PAYMENT_REPOSITORY");

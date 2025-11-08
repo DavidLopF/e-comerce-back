@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { CreatePreferencesDto } from '../../presentation/http/dto/create-preferences.dto';
+import chalk from 'chalk';
 
 @Injectable()
 export class MercadoPagoService {
@@ -19,7 +20,7 @@ export class MercadoPagoService {
   }
 
   async createPreferences(data: CreatePreferencesDto) {
-    this.logger.log('🔄 Creando preferencia de pago con datos:', JSON.stringify(data, null, 2));
+    this.logger.log(chalk.cyan('🔄 Creando preferencia de pago con datos:') + '\n' + chalk.gray(JSON.stringify(data, null, 2)));
     
     try {
       const preferenceData = {
@@ -35,16 +36,11 @@ export class MercadoPagoService {
         external_reference: data.external_reference,
         currency_id: 'COP', // Moneda colombiana
         // Información del comprador (opcional)
-        payer: data.payer_name || data.payer_email || data.payer_document || data.payer_phone ? {
-          name: data.payer_name,
-          email: data.payer_email,
-          identification: data.payer_document ? {
-            type: 'CC', // Cédula de Ciudadanía
-            number: data.payer_document,
-          } : undefined,
-          phone: data.payer_phone ? {
-            number: data.payer_phone,
-          } : undefined,
+        payer: data.payer ? {
+          name: data.payer.name,
+          email: data.payer.email,
+          phone: data.payer.phone,
+          address: data.payer.address,
         } : undefined,
         back_urls: {
           success: (process.env.FRONTEND_URL || 'https://localhost:3000') + '/pago/exito',
@@ -54,15 +50,15 @@ export class MercadoPagoService {
         auto_return: 'approved',
       };
 
-      this.logger.log('📤 Enviando datos a MercadoPago:', JSON.stringify(preferenceData, null, 2));
+      this.logger.log(chalk.blue('📤 Enviando datos a MercadoPago:') + '\n' + chalk.gray(JSON.stringify(preferenceData, null, 2)));
       
       const response = await this.preference.create({ body: preferenceData });
       
-      this.logger.log('✅ Respuesta de MercadoPago:', JSON.stringify({
+      this.logger.log(chalk.green('✅ Respuesta de MercadoPago:') + '\n' + chalk.yellow(JSON.stringify({
         id: response.id,
         init_point: response.init_point,
         sandbox_init_point: response.sandbox_init_point,
-      }, null, 2));
+      }, null, 2)));
       
       return {
         id: response.id,
@@ -70,12 +66,12 @@ export class MercadoPagoService {
         sandbox_init_point: response.sandbox_init_point,
       };
     } catch (error) {
-      this.logger.error('❌ Error detallado de MercadoPago:', {
+      this.logger.error(chalk.red('❌ Error detallado de MercadoPago:') + '\n' + chalk.redBright(JSON.stringify({
         message: error.message,
         status: error.status,
         cause: error.cause,
         stack: error.stack
-      });
+      }, null, 2)));
       throw new Error(`Error al crear preferencia de pago: ${error.message}`);
     }
   }

@@ -14,11 +14,13 @@ import { MercadoPagoService } from "./modules/application/payments/mercadopago.s
 import { PRODUCT_REPOSITORY } from "./modules/domain/products/ports/product.repository";
 import { COMMON_REPOSITORY } from "./modules/domain/store/ports/common.repository";
 import { USER_REPOSITORY } from "./modules/domain/users/ports/user.repository";
+import { PAYMENT_REPOSITORY } from "./modules/domain/payments/ports/payments.repository";
 import { ProductsPrismaRepository } from "./modules/infrastructure/persistence/prisma/repositories/products.prisma.repository";
 import { CommonPrismaRepository } from "./modules/infrastructure/persistence/prisma/repositories/common.prisma.repository";
 import { UserPrismaRepository } from "./modules/infrastructure/persistence/prisma/repositories/user.repository";
 import { RolePrismaRepository } from "./modules/infrastructure/persistence/prisma/repositories/role.prisma.repository";
 import { StorePrismaRepository } from "./modules/infrastructure/persistence/prisma/repositories/store.prisma.repository";
+import { PaymentsPrismaRepository } from "./modules/infrastructure/persistence/prisma/repositories/payments.prisma.repository";
 
 @Module({
   imports: [
@@ -38,6 +40,7 @@ import { StorePrismaRepository } from "./modules/infrastructure/persistence/pris
     { provide: PRODUCT_REPOSITORY, useClass: ProductsPrismaRepository },
     { provide: COMMON_REPOSITORY, useClass: CommonPrismaRepository },
     { provide: USER_REPOSITORY, useClass: UserPrismaRepository },
+    { provide: PAYMENT_REPOSITORY, useClass: PaymentsPrismaRepository },
     { provide: 'ROLE_REPOSITORY', useClass: RolePrismaRepository },
     { provide: 'STORE_REPOSITORY', useClass: StorePrismaRepository }
   ],

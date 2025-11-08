@@ -3,6 +3,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBody } from "@nestjs/swagger";
 import { PaymentsService } from "src/modules/application/payments/payments.service";
 import { CreatePreferencesDto } from "../dto/create-preferences.dto";
 import { FirebaseAuthGuard } from "src/common/guards/firebase-auth.guard";
+import { RegisterPaymentDto } from "../dto/register-payment.dto";
 
 @ApiTags('payments')
 @Controller('payments')
@@ -33,6 +34,27 @@ export class PaymentsController {
     return this.paymentsService.createPreferences(body);
   }
     
+
+ @Post('register-payment')
+ @UseGuards(FirebaseAuthGuard)
+  @ApiOperation({ summary: 'Registrar un pago realizado (Mock)' })
+  @ApiResponse({
+    status: 201,
+    description: 'Pago registrado exitosamente',
+    schema: {
+      example: {
+        message: 'Pago registrado exitosamente'
+      }
+    }
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Datos de entrada inválidos'
+  })
+ async registerPayment(@Body() body: RegisterPaymentDto) {
+
+    return this.paymentsService.registerPayment(body);
+ }
 
  
 }

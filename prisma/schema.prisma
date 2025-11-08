@@ -44,6 +44,7 @@ model Store {
   socialMedia SocialMedia[]
 
   userRoles UserRole[]
+  payments  Payment[]
 
   @@map("stores")
 }
@@ -212,6 +213,7 @@ model User {
   updatedAt   DateTime @updatedAt
   firebaseUid String?
 
+  Payment   Payment[]
   userRoles UserRole[]
 
   @@map("users")
@@ -219,16 +221,21 @@ model User {
 
 model Payment {
   id            String   @id @default(cuid())
-  name          String
+  reference     String   @unique
+  storeId       String
+  userId        String
   paymentMethod String
-  description   String?
+  amount        Float
   order         Int      @default(0)
   isActive      Boolean  @default(true)
-  completed    Boolean  @default(false)
+  completed     Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
   productPayments ProductPayment[]
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
 
   @@map("payments")
 }

@@ -4,10 +4,13 @@ import { AppModule } from './app.module';
 import { PrismaService } from './modules/infrastructure/persistence/prisma/prisma.service';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { CustomLogger } from './common/logger/custom.logger';
 import './common/config/firebase.config'; // Inicializar Firebase Admin
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: new CustomLogger(),
+  });
 
   // Configurar logging global
   app.useGlobalInterceptors(new LoggingInterceptor());

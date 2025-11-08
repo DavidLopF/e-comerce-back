@@ -8,6 +8,7 @@ import {
   ConflictException,
   NotFoundException,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -176,8 +177,32 @@ export class UserController {
     status: 404,
     description: 'Usuario no encontrado',
   })
-  async getUserById(@Param('id') id: string) {
-    return this.userService.getUserByFirebaseUid(id);
+  async getUserById(@Param('id') id: string, @Req() request: any) {
+    let user = await this.userService.getUserByFirebaseUid(id);
+    
+    if (!user) {
+      // Si el usuario no existe, lo creamos automáticamente desde los datos de Firebase
+      const firebaseUser = request.user; // El usuario viene del guard de Firebase
+      
+      if (!firebaseUser) {
+        throw new NotFoundException('Usuario no encontrado y no se pudo crear automáticamente');
+      }
+
+      // Crear el usuario automáticamente
+      user = await this.userService.createUser(
+        User.create(
+          firebaseUser.email || '',
+          firebaseUser.name || firebaseUser.email || 'Usuario',
+          id,
+          true,
+          firebaseUser.phone_number || null,
+          undefined,
+        ),
+        undefined, // Sin tienda por defecto
+      );
+    }
+    
+    return user;
   }
 
   @Get('permissions/:firebaeUid/:storeId')

@@ -1,29 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { Payment } from 'mercadopago';
 import { PaymentsRepository } from 'src/modules/domain/payments/ports/payments.repository';
+import { RegisterPaymentDto } from 'src/modules/presentation/http/dto/register-payment.dto';
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class PaymentsPrismaRepository implements PaymentsRepository {
-  createPayments(): Promise<{
-    name: string;
-    id: string;
-    paymentMethod: string;
-    description: string | null;
-    order: number;
-    isActive: boolean;
-    completed: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-  }> {
-    throw new Error('Method not implemented.');
+  constructor(private readonly prisma: PrismaService) {}
+
+  async registerPayment(paymentData: RegisterPaymentDto): Promise<any> {
+
+    const store = await this.prisma.store.findUnique({ where: { slug: paymentData.company_slug } });
+
+  
+    return await this.prisma.payment.create({
+      data: {
+        amount: paymentData.amount,
+        reference: paymentData.reference,
+        storeId: store?.id || '',
+        userId: paymentData.user_id,
+        paymentMethod: paymentData.paymentMethod || 'UNKNOWN',
+        createdAt: new Date(),
+      },
+    });
   }
-  getAllPaymentsByStore(storeId: string): Promise<Payment[]> {
-    throw new Error('Method not implemented.');
-  }
-  getActivePaymentsByStore(storeId: string): Promise<Payment[]> {
-    throw new Error('Method not implemented.');
-  }
-  getPaymentById(id: string): Promise<Payment | null> {
-    throw new Error('Method not implemented.');
-  }
+  
 }

@@ -50,6 +50,44 @@ export class ItemDto {
   picture_url?: string;
 }
 
+export class PayerDto {
+  @ApiProperty({ 
+    description: 'Nombre del comprador',
+    example: 'Juan Pérez'
+  })
+  @IsString()
+  name: string;
+
+  @ApiProperty({ 
+    description: 'Email del comprador',
+    example: 'juan.perez@ejemplo.com' 
+  })
+  @IsString()
+  email: string;
+
+  @ApiProperty({ 
+    description: 'Teléfono del comprador',
+    example: '+57 300 123 4567',
+    required: false
+  })
+  @IsOptional()
+  @IsString()
+  phone?: {
+    number: string;
+  }
+
+  @ApiProperty({ 
+    description: 'Dirección del comprador',
+    example: 'Calle Falsa 123',
+    required: false
+  })
+  @IsOptional()
+  @IsString()
+  address?: {
+    street_name: string;
+  }
+}
+
 export class CreatePreferencesDto {
   @ApiProperty({ 
     description: 'Lista de items a incluir en la preferencia de pago',
@@ -88,40 +126,20 @@ export class CreatePreferencesDto {
   @IsOptional()
   external_reference?: string;
 
-  // Información del comprador (opcional)
+ 
   @ApiProperty({ 
-    description: 'Nombre del comprador',
-    example: 'Juan Pérez',
-    required: false
+    description: 'Información del comprador',
+    type: PayerDto,
+    required: false,
+    example: {
+      name: 'Juan Pérez',
+      email:  'juan.perez@ejemplo.com',
+      phone: '+57 300 123 4567',
+      address: 'Calle Falsa 123'
+    }
   })
-  @IsString()
   @IsOptional()
-  payer_name?: string;
-
-  @ApiProperty({ 
-    description: 'Email del comprador',
-    example: 'juan.perez@ejemplo.com',
-    required: false
-  })
-  @IsString()
-  @IsOptional()
-  payer_email?: string;
-
-  @ApiProperty({ 
-    description: 'Documento de identidad del comprador',
-    example: '12345678',
-    required: false
-  })
-  @IsString()
-  @IsOptional()
-  payer_document?: string;
-
-  @ApiProperty({ 
-    description: 'Teléfono del comprador',
-    example: '+57 300 123 4567',
-    required: false
-  })
-  @IsString()
-  @IsOptional()
-  payer_phone?: string;
+  @ValidateNested()
+  @Type(() => PayerDto)
+  payer?: PayerDto; 
 }

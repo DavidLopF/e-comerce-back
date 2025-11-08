@@ -33,6 +33,8 @@ export const UserMapper = {
       name: entity.name,
       isActive: entity.isActive,
       firebaseUid: entity.firebaseUid,
+      phone: entity.phone,
+      address: entity.address,
     };
   },
 };
