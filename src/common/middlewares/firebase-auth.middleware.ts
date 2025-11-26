@@ -1,4 +1,8 @@
-import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NestMiddleware,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import { Request, Response, NextFunction } from 'express';
 

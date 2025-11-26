@@ -18,22 +18,24 @@ export class ProductsPrismaRepository implements ProductRepository {
 
   async findBySlug(slug: string): Promise<Product | null> {
     // Como slug ya no es único por sí solo, buscamos el primer producto activo con ese slug
-    const row = await this.prisma.product.findFirst({ 
-      where: { 
+    const row = await this.prisma.product.findFirst({
+      where: {
         slug,
-        active: true 
-      } 
+        active: true,
+      },
     });
     return row ? ProductMapper.toDomain(row) : null;
   }
 
   async create(entity: Product): Promise<Product> {
     // Por ahora usamos la primera tienda activa como default
-    const store = await this.prisma.store.findFirst({ where: { isActive: true } });
+    const store = await this.prisma.store.findFirst({
+      where: { isActive: true },
+    });
     if (!store) {
       throw new Error('No se encontró una tienda activa');
     }
-    
+
     const created = await this.prisma.product.create({
       data: ProductMapper.toPrismaCreate(entity, store.id),
     });

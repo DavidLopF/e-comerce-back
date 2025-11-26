@@ -29,8 +29,7 @@ export class User {
       now,
       firebaseUid,
       phone,
-      address
-
+      address,
     );
   }
 

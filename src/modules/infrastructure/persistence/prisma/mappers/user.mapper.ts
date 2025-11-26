@@ -1,5 +1,5 @@
-import { Prisma, User as PrismaUser } from "@prisma/client";
-import { User } from "../../../../domain/users/entities/user.entity";
+import { Prisma, User as PrismaUser } from '@prisma/client';
+import { User } from '../../../../domain/users/entities/user.entity';
 
 export const UserMapper = {
   toDomain(row: PrismaUser): User {
@@ -12,7 +12,7 @@ export const UserMapper = {
       row.updatedAt,
       row.firebaseUid || undefined,
       row.phone || undefined,
-      row.address || undefined
+      row.address || undefined,
     );
   },
 
@@ -23,7 +23,7 @@ export const UserMapper = {
       isActive: entity.isActive,
       firebaseUid: entity.firebaseUid,
       phone: entity.phone,
-      address: entity.address
+      address: entity.address,
     };
   },
 

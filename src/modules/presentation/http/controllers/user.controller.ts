@@ -179,13 +179,15 @@ export class UserController {
   })
   async getUserById(@Param('id') id: string, @Req() request: any) {
     let user = await this.userService.getUserByFirebaseUid(id);
-    
+
     if (!user) {
       // Si el usuario no existe, lo creamos automáticamente desde los datos de Firebase
       const firebaseUser = request.user; // El usuario viene del guard de Firebase
-      
+
       if (!firebaseUser) {
-        throw new NotFoundException('Usuario no encontrado y no se pudo crear automáticamente');
+        throw new NotFoundException(
+          'Usuario no encontrado y no se pudo crear automáticamente',
+        );
       }
 
       // Crear el usuario automáticamente
@@ -201,7 +203,7 @@ export class UserController {
         undefined, // Sin tienda por defecto
       );
     }
-    
+
     return user;
   }
 

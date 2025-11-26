@@ -17,7 +17,9 @@ if (!admin.apps.length) {
   if (serviceAccountPath) {
     // Prefer explicit JSON file path if provided
     admin.initializeApp({
-      credential: admin.credential.cert(join(process.cwd(), serviceAccountPath)),
+      credential: admin.credential.cert(
+        join(process.cwd(), serviceAccountPath),
+      ),
     });
   } else if (
     process.env.FIREBASE_PROJECT_ID &&

@@ -1,7 +1,7 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { PRODUCT_REPOSITORY } from "../../domain/products/ports/product.repository";
-import type { ProductRepository } from "../../domain/products/ports/product.repository";
-import { Product } from "../../domain/products/entities/product.entity";
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { PRODUCT_REPOSITORY } from '../../domain/products/ports/product.repository';
+import type { ProductRepository } from '../../domain/products/ports/product.repository';
+import { Product } from '../../domain/products/entities/product.entity';
 
 @Injectable()
 export class ProductService {
@@ -15,7 +15,7 @@ export class ProductService {
 
   async getBySlug(slug: string): Promise<Product> {
     const p = await this.repo.findBySlug(slug);
-    if (!p) throw new NotFoundException("Producto no encontrado");
+    if (!p) throw new NotFoundException('Producto no encontrado');
     return p;
   }
 
