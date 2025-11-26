@@ -9,23 +9,27 @@ import { Role } from 'src/modules/domain/users/entities/roles.entity';
 @Injectable()
 export class UserPrismaRepository implements UserRepository {
   constructor(private readonly prisma: PrismaService) {}
-  async getUsersByStoreSlug(storeSlug: string, skip: number, limit: number): Promise<{ users: any[], total: number }> {
+  async getUsersByStoreSlug(
+    storeSlug: string,
+    skip: number,
+    limit: number,
+  ): Promise<{ users: any[]; total: number }> {
     const store = await this.prisma.store.findUnique({
       where: { slug: storeSlug },
     });
     if (!store) {
       return { users: [], total: 0 };
     }
-    
+
     // Obtener usuarios que tienen roles en esta tienda específica
     const userRoles = await this.prisma.userRole.findMany({
       where: { storeId: store.id },
       skip: skip,
       take: limit,
-      include: { 
+      include: {
         user: true,
         role: true,
-        store: true
+        store: true,
       },
     });
 
@@ -37,7 +41,7 @@ export class UserPrismaRepository implements UserRepository {
     // Mapear los usuarios y agregar información adicional necesaria para la tabla
     const users = userRoles.map((userRole) => {
       const user = userRole.user;
-      
+
       return {
         id: user.id,
         name: user.name,
@@ -49,16 +53,15 @@ export class UserPrismaRepository implements UserRepository {
         address: user.address,
         totalOrders: 0, // Por ahora 0, implementar según tu lógica de negocio
         totalSpent: 0, // Por ahora 0, implementar según tu lógica de negocio
-        userType: userRole.role.name === 'admin' || userRole.role.name === 'store_admin' ? 'Admin' : 'Regular'
+        userType:
+          userRole.role.name === 'admin' || userRole.role.name === 'store_admin'
+            ? 'Admin'
+            : 'Regular',
       };
     });
 
     return { users, total };
   }
-
-
-
- 
 
   async userRoles(email: string, storeSlug: string): Promise<UserRole[]> {
     const user = await this.prisma.user.findUnique({
@@ -83,7 +86,6 @@ export class UserPrismaRepository implements UserRepository {
     return roles;
   }
 
-
   async getByFirebaseUid(firebaseUid: string): Promise<User | null> {
     try {
       const user = await this.prisma.user.findFirst({
@@ -97,7 +99,7 @@ export class UserPrismaRepository implements UserRepository {
       throw new Error(error as any);
     }
   }
-  
+
   async createUserRole(
     email: string,
     storeId: string,
@@ -163,16 +165,20 @@ export class UserPrismaRepository implements UserRepository {
     return user ? true : false;
   }
 
-  async getUsersByStoreId(storeId: string, skip: number, limit: number): Promise<{ users: any[], total: number }> {
+  async getUsersByStoreId(
+    storeId: string,
+    skip: number,
+    limit: number,
+  ): Promise<{ users: any[]; total: number }> {
     // Obtener usuarios que tienen roles en esta tienda específica
     const userRoles = await this.prisma.userRole.findMany({
       where: { storeId },
       skip: skip,
       take: limit,
-      include: { 
+      include: {
         user: true,
         role: true,
-        store: true
+        store: true,
       },
     });
 
@@ -184,7 +190,7 @@ export class UserPrismaRepository implements UserRepository {
     // Mapear los usuarios y agregar información adicional necesaria para la tabla
     const users = userRoles.map((userRole) => {
       const user = userRole.user;
-      
+
       return {
         id: user.id,
         name: user.name,
@@ -196,7 +202,10 @@ export class UserPrismaRepository implements UserRepository {
         address: user.address,
         totalOrders: 0, // Por ahora 0, implementar según tu lógica de negocio
         totalSpent: 0, // Por ahora 0, implementar según tu lógica de negocio
-        userType: userRole.role.name === 'admin' || userRole.role.name === 'store_admin' ? 'Admin' : 'Regular'
+        userType:
+          userRole.role.name === 'admin' || userRole.role.name === 'store_admin'
+            ? 'Admin'
+            : 'Regular',
       };
     });
 

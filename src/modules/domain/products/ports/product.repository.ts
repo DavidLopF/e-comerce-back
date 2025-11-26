@@ -1,4 +1,4 @@
-import { Product } from "../entities/product.entity";
+import { Product } from '../entities/product.entity';
 
 export interface ProductRepository {
   listActive(): Promise<Product[]>;
@@ -7,4 +7,4 @@ export interface ProductRepository {
   update(entity: Product): Promise<Product>;
   delete(id: string): Promise<void>;
 }
-export const PRODUCT_REPOSITORY = Symbol("PRODUCT_REPOSITORY");
+export const PRODUCT_REPOSITORY = Symbol('PRODUCT_REPOSITORY');

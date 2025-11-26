@@ -1,49 +1,54 @@
-import { IsString, IsNumber, IsArray, ValidateNested, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsArray,
+  ValidateNested,
+  IsOptional,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ItemDto {
-
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'ID único del producto',
-    example: 'cm1234567890abcdef'
+    example: 'cm1234567890abcdef',
   })
   @IsString()
   id: string;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Título del producto',
-    example: 'Laptop Gaming Acer Nitro 5'
+    example: 'Laptop Gaming Acer Nitro 5',
   })
   @IsString()
   title: string;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Descripción del producto',
-    example: 'Laptop gaming con procesador Intel i7 y tarjeta gráfica RTX 3060'
+    example: 'Laptop gaming con procesador Intel i7 y tarjeta gráfica RTX 3060',
   })
   @IsString()
   description: string;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Cantidad del producto',
     example: 1,
-    minimum: 1
+    minimum: 1,
   })
   @IsNumber()
   quantity: number;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Precio unitario en centavos',
-    example: 2500000
+    example: 2500000,
   })
   @IsNumber()
   unit_price: number;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'URL de la imagen del producto',
     example: 'https://example.com/images/laptop.jpg',
-    required: false
+    required: false,
   })
   @IsOptional()
   @IsString()
@@ -51,45 +56,45 @@ export class ItemDto {
 }
 
 export class PayerDto {
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Nombre del comprador',
-    example: 'Juan Pérez'
+    example: 'Juan Pérez',
   })
   @IsString()
   name: string;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Email del comprador',
-    example: 'juan.perez@ejemplo.com' 
+    example: 'juan.perez@ejemplo.com',
   })
   @IsString()
   email: string;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Teléfono del comprador',
     example: '+57 300 123 4567',
-    required: false
+    required: false,
   })
   @IsOptional()
   @IsString()
   phone?: {
     number: string;
-  }
+  };
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Dirección del comprador',
     example: 'Calle Falsa 123',
-    required: false
+    required: false,
   })
   @IsOptional()
   @IsString()
   address?: {
     street_name: string;
-  }
+  };
 }
 
 export class CreatePreferencesDto {
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Lista de items a incluir en la preferencia de pago',
     type: [ItemDto],
     example: [
@@ -99,47 +104,46 @@ export class CreatePreferencesDto {
         description: 'Laptop gaming con procesador Intel i7',
         quantity: 1,
         unit_price: 2500000,
-        picture_url: 'https://example.com/images/laptop.jpg'
-      }
-    ]
+        picture_url: 'https://example.com/images/laptop.jpg',
+      },
+    ],
   })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ItemDto)
   items: ItemDto[];
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'URL para recibir notificaciones de webhook',
     example: 'https://tu-dominio.com/webhooks/mercadopago',
-    required: false
+    required: false,
   })
   @IsString()
   @IsOptional()
   notification_url?: string;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Referencia externa para identificar la orden',
     example: 'ORDER-12345',
-    required: false
+    required: false,
   })
   @IsString()
   @IsOptional()
   external_reference?: string;
 
- 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Información del comprador',
     type: PayerDto,
     required: false,
     example: {
       name: 'Juan Pérez',
-      email:  'juan.perez@ejemplo.com',
+      email: 'juan.perez@ejemplo.com',
       phone: '+57 300 123 4567',
-      address: 'Calle Falsa 123'
-    }
+      address: 'Calle Falsa 123',
+    },
   })
   @IsOptional()
   @ValidateNested()
   @Type(() => PayerDto)
-  payer?: PayerDto; 
+  payer?: PayerDto;
 }

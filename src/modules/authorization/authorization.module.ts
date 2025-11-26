@@ -6,15 +6,7 @@ import { AdminAuthorizationMiddleware } from '../../common/middlewares/admin-aut
 
 @Module({
   imports: [PrismaModule],
-  providers: [
-    AuthorizationService,
-    AdminGuard,
-    AdminAuthorizationMiddleware,
-  ],
-  exports: [
-    AuthorizationService,
-    AdminGuard,
-    AdminAuthorizationMiddleware,
-  ],
+  providers: [AuthorizationService, AdminGuard, AdminAuthorizationMiddleware],
+  exports: [AuthorizationService, AdminGuard, AdminAuthorizationMiddleware],
 })
 export class AuthorizationModule {}

@@ -10,7 +10,6 @@ export class CommonService {
     @Inject(COMMON_REPOSITORY) private readonly repo: CommonRepository,
   ) {}
 
-
   async getHeroSlides() {
     try {
       return this.repo.getHeroSlides();
@@ -25,7 +24,7 @@ export class CommonService {
 
       // Transformar las redes sociales a un objeto
       const socialMedia: { [key: string]: string } = {};
-      data.socialMedia.forEach(sm => {
+      data.socialMedia.forEach((sm) => {
         socialMedia[sm.platform] = sm.url;
       });
 
@@ -33,11 +32,11 @@ export class CommonService {
       const themeColors = data.config?.theme?.colors || {
         primary: '#3b82f6',
         secondary: '#8b5cf6',
-        background: '#ffffff'
+        background: '#ffffff',
       };
 
       // Transformar los slides del hero
-      const slides = data.heroSlides.map(slide => ({
+      const slides = data.heroSlides.map((slide) => ({
         id: slide.id,
         title: slide.title,
         subtitle: slide.subtitle,
@@ -47,19 +46,21 @@ export class CommonService {
         cta: {
           text: slide.ctaText,
           link: slide.ctaLink,
-          style: slide.ctaStyle
+          style: slide.ctaStyle,
         },
-        secondaryCta: slide.secondaryCtaText ? {
-          text: slide.secondaryCtaText,
-          link: slide.secondaryCtaLink,
-          style: slide.secondaryCtaStyle
-        } : undefined,
+        secondaryCta: slide.secondaryCtaText
+          ? {
+              text: slide.secondaryCtaText,
+              link: slide.secondaryCtaLink,
+              style: slide.secondaryCtaStyle,
+            }
+          : undefined,
         alignment: slide.alignment,
         backgroundColor: slide.backgroundColor,
         textColor: slide.textColor,
         overlay: slide.overlay,
         overlayOpacity: slide.overlayOpacity,
-        order: slide.order
+        order: slide.order,
       }));
 
       return {
@@ -71,19 +72,19 @@ export class CommonService {
               url: data.store.logo,
               alt: `Logo de ${data.store.name}`,
               width: 180,
-              height: 50
+              height: 50,
             },
             contactEmail: data.store.email,
-            socialMedia
+            socialMedia,
           },
           theme: {
-            colors: themeColors
+            colors: themeColors,
           },
           hero: {
             enabled: slides.length > 0,
-            slides
-          }
-        }
+            slides,
+          },
+        },
       };
     } catch (error) {
       console.error('Error en getStoreConfig:', error);

@@ -10,11 +10,11 @@ export class CustomLogger implements LoggerService {
 
   private formatTimestamp(): string {
     const now = new Date();
-    return now.toLocaleTimeString('en-US', { 
-      hour12: false, 
-      hour: '2-digit', 
-      minute: '2-digit', 
-      second: '2-digit' 
+    return now.toLocaleTimeString('en-US', {
+      hour12: false,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
     });
   }
 
@@ -22,7 +22,7 @@ export class CustomLogger implements LoggerService {
     const timestamp = this.formatTimestamp();
     const ctx = context || this.context || 'Application';
     console.log(
-      `${chalk.gray(`[Nest] ${process.pid}  - `)}${chalk.gray(timestamp)}     ${chalk.bold.green('LOG')} ${chalk.yellow(`[${ctx}]`)} ${chalk.white(message)}`
+      `${chalk.gray(`[Nest] ${process.pid}  - `)}${chalk.gray(timestamp)}     ${chalk.bold.green('LOG')} ${chalk.yellow(`[${ctx}]`)} ${chalk.white(message)}`,
     );
   }
 
@@ -30,7 +30,7 @@ export class CustomLogger implements LoggerService {
     const timestamp = this.formatTimestamp();
     const ctx = context || this.context || 'Application';
     console.error(
-      `${chalk.gray(`[Nest] ${process.pid}  - `)}${chalk.gray(timestamp)}   ${chalk.bold.red('ERROR')} ${chalk.yellow(`[${ctx}]`)} ${chalk.red(message)}`
+      `${chalk.gray(`[Nest] ${process.pid}  - `)}${chalk.gray(timestamp)}   ${chalk.bold.red('ERROR')} ${chalk.yellow(`[${ctx}]`)} ${chalk.red(message)}`,
     );
     if (trace) {
       console.error(chalk.dim(trace));
@@ -41,7 +41,7 @@ export class CustomLogger implements LoggerService {
     const timestamp = this.formatTimestamp();
     const ctx = context || this.context || 'Application';
     console.warn(
-      `${chalk.gray(`[Nest] ${process.pid}  - `)}${chalk.gray(timestamp)}    ${chalk.bold.hex('#FFA500')('WARN')} ${chalk.yellow(`[${ctx}]`)} ${chalk.hex('#FFA500')(message)}`
+      `${chalk.gray(`[Nest] ${process.pid}  - `)}${chalk.gray(timestamp)}    ${chalk.bold.hex('#FFA500')('WARN')} ${chalk.yellow(`[${ctx}]`)} ${chalk.hex('#FFA500')(message)}`,
     );
   }
 
@@ -49,7 +49,7 @@ export class CustomLogger implements LoggerService {
     const timestamp = this.formatTimestamp();
     const ctx = context || this.context || 'Application';
     console.debug(
-      `${chalk.gray(`[Nest] ${process.pid}  - `)}${chalk.gray(timestamp)}   ${chalk.bold.magenta('DEBUG')} ${chalk.yellow(`[${ctx}]`)} ${chalk.magenta(message)}`
+      `${chalk.gray(`[Nest] ${process.pid}  - `)}${chalk.gray(timestamp)}   ${chalk.bold.magenta('DEBUG')} ${chalk.yellow(`[${ctx}]`)} ${chalk.magenta(message)}`,
     );
   }
 
@@ -57,7 +57,7 @@ export class CustomLogger implements LoggerService {
     const timestamp = this.formatTimestamp();
     const ctx = context || this.context || 'Application';
     console.log(
-      `${chalk.gray(`[Nest] ${process.pid}  - `)}${chalk.gray(timestamp)} ${chalk.bold.cyan('VERBOSE')} ${chalk.yellow(`[${ctx}]`)} ${chalk.cyan(message)}`
+      `${chalk.gray(`[Nest] ${process.pid}  - `)}${chalk.gray(timestamp)} ${chalk.bold.cyan('VERBOSE')} ${chalk.yellow(`[${ctx}]`)} ${chalk.cyan(message)}`,
     );
   }
 }

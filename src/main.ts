@@ -18,13 +18,19 @@ async function bootstrap() {
   // Configurar CORS
   app.enableCors({
     origin: [
-      'http://localhost:3000', 
+      'http://localhost:3000',
       'http://localhost:7008',
-      'https://front-e-comerce-seven.vercel.app', 
-      process.env.FRONTEND_URL // Variable de entorno para el frontend
+      'https://front-e-comerce-seven.vercel.app',
+      process.env.FRONTEND_URL, // Variable de entorno para el frontend
     ].filter(Boolean), // Filtra valores undefined
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Accept',
+      'Origin',
+      'X-Requested-With',
+    ],
     credentials: true,
   });
 
@@ -41,7 +47,7 @@ async function bootstrap() {
     .addTag('payments', 'Gestión de pagos')
     .addTag('common', 'Configuración común y tiendas')
     .build();
-  
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document, {
     customSiteTitle: 'E-Commerce API Docs',
@@ -50,7 +56,7 @@ async function bootstrap() {
   });
 
   const prisma = app.get(PrismaService);
-  app.enableShutdownHooks(); 
+  app.enableShutdownHooks();
 
   await app.listen(process.env.PORT || 3000);
 }

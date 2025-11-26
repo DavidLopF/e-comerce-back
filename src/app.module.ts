@@ -1,26 +1,26 @@
-import { Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
-import { PrismaModule } from "./modules/infrastructure/persistence/prisma/prisma.module";
-import { AuthorizationModule } from "./modules/authorization/authorization.module";
-import { ProductsController } from "./modules/presentation/http/controllers/product.controller";
-import { CommonController } from "./modules/presentation/http/controllers/common.controller";
-import { PaymentsController } from "./modules/presentation/http/controllers/payments.controller";
-import { UserController } from "./modules/presentation/http/controllers/user.controller";
-import { ProductService } from "./modules/application/products/product.service";
-import { CommonService } from "./modules/application/common/common.services";
-import { PaymentsService } from "./modules/application/payments/payments.service";
-import { UserService } from "./modules/application/users/user.service";
-import { MercadoPagoService } from "./modules/application/payments/mercadopago.service";
-import { PRODUCT_REPOSITORY } from "./modules/domain/products/ports/product.repository";
-import { COMMON_REPOSITORY } from "./modules/domain/store/ports/common.repository";
-import { USER_REPOSITORY } from "./modules/domain/users/ports/user.repository";
-import { PAYMENT_REPOSITORY } from "./modules/domain/payments/ports/payments.repository";
-import { ProductsPrismaRepository } from "./modules/infrastructure/persistence/prisma/repositories/products.prisma.repository";
-import { CommonPrismaRepository } from "./modules/infrastructure/persistence/prisma/repositories/common.prisma.repository";
-import { UserPrismaRepository } from "./modules/infrastructure/persistence/prisma/repositories/user.repository";
-import { RolePrismaRepository } from "./modules/infrastructure/persistence/prisma/repositories/role.prisma.repository";
-import { StorePrismaRepository } from "./modules/infrastructure/persistence/prisma/repositories/store.prisma.repository";
-import { PaymentsPrismaRepository } from "./modules/infrastructure/persistence/prisma/repositories/payments.prisma.repository";
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { PrismaModule } from './modules/infrastructure/persistence/prisma/prisma.module';
+import { AuthorizationModule } from './modules/authorization/authorization.module';
+import { ProductsController } from './modules/presentation/http/controllers/product.controller';
+import { CommonController } from './modules/presentation/http/controllers/common.controller';
+import { PaymentsController } from './modules/presentation/http/controllers/payments.controller';
+import { UserController } from './modules/presentation/http/controllers/user.controller';
+import { ProductService } from './modules/application/products/product.service';
+import { CommonService } from './modules/application/common/common.services';
+import { PaymentsService } from './modules/application/payments/payments.service';
+import { UserService } from './modules/application/users/user.service';
+import { MercadoPagoService } from './modules/application/payments/mercadopago.service';
+import { PRODUCT_REPOSITORY } from './modules/domain/products/ports/product.repository';
+import { COMMON_REPOSITORY } from './modules/domain/store/ports/common.repository';
+import { USER_REPOSITORY } from './modules/domain/users/ports/user.repository';
+import { PAYMENT_REPOSITORY } from './modules/domain/payments/ports/payments.repository';
+import { ProductsPrismaRepository } from './modules/infrastructure/persistence/prisma/repositories/products.prisma.repository';
+import { CommonPrismaRepository } from './modules/infrastructure/persistence/prisma/repositories/common.prisma.repository';
+import { UserPrismaRepository } from './modules/infrastructure/persistence/prisma/repositories/user.repository';
+import { RolePrismaRepository } from './modules/infrastructure/persistence/prisma/repositories/role.prisma.repository';
+import { StorePrismaRepository } from './modules/infrastructure/persistence/prisma/repositories/store.prisma.repository';
+import { PaymentsPrismaRepository } from './modules/infrastructure/persistence/prisma/repositories/payments.prisma.repository';
 
 @Module({
   imports: [
@@ -28,9 +28,14 @@ import { PaymentsPrismaRepository } from "./modules/infrastructure/persistence/p
       isGlobal: true,
     }),
     PrismaModule,
-    AuthorizationModule
+    AuthorizationModule,
   ],
-  controllers: [ProductsController, CommonController, PaymentsController, UserController],
+  controllers: [
+    ProductsController,
+    CommonController,
+    PaymentsController,
+    UserController,
+  ],
   providers: [
     ProductService,
     CommonService,
@@ -42,7 +47,7 @@ import { PaymentsPrismaRepository } from "./modules/infrastructure/persistence/p
     { provide: USER_REPOSITORY, useClass: UserPrismaRepository },
     { provide: PAYMENT_REPOSITORY, useClass: PaymentsPrismaRepository },
     { provide: 'ROLE_REPOSITORY', useClass: RolePrismaRepository },
-    { provide: 'STORE_REPOSITORY', useClass: StorePrismaRepository }
+    { provide: 'STORE_REPOSITORY', useClass: StorePrismaRepository },
   ],
 })
 export class AppModule {}

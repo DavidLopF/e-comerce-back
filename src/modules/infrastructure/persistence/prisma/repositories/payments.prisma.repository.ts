@@ -9,10 +9,10 @@ export class PaymentsPrismaRepository implements PaymentsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async registerPayment(paymentData: RegisterPaymentDto): Promise<any> {
+    const store = await this.prisma.store.findUnique({
+      where: { slug: paymentData.company_slug },
+    });
 
-    const store = await this.prisma.store.findUnique({ where: { slug: paymentData.company_slug } });
-
-  
     return await this.prisma.payment.create({
       data: {
         amount: paymentData.amount,
@@ -24,5 +24,4 @@ export class PaymentsPrismaRepository implements PaymentsRepository {
       },
     });
   }
-  
 }

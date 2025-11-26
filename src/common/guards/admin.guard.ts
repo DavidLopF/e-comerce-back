@@ -1,4 +1,10 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import { AuthorizationService } from '../../modules/application/authorization/authorization.service';
 
@@ -31,10 +37,17 @@ export class AdminGuard implements CanActivate {
       const storeSlug = request.params.storeSlug || request.query.storeSlug;
 
       // Verificar si el usuario es admin (puede ser por ID o por slug)
-      const isAuthorized = await this.authorizationService.isAuthorizedBySlugOrId(userEmail, storeSlug, storeId);
-      
+      const isAuthorized =
+        await this.authorizationService.isAuthorizedBySlugOrId(
+          userEmail,
+          storeSlug,
+          storeId,
+        );
+
       if (!isAuthorized) {
-        throw new ForbiddenException('Access denied. Admin privileges required');
+        throw new ForbiddenException(
+          'Access denied. Admin privileges required',
+        );
       }
 
       return true;

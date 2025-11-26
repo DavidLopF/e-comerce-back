@@ -1,5 +1,5 @@
-import { Prisma, Product as PrismaProduct } from "@prisma/client";
-import { Product } from "../../../../domain/products/entities/product.entity";
+import { Prisma, Product as PrismaProduct } from '@prisma/client';
+import { Product } from '../../../../domain/products/entities/product.entity';
 
 export const ProductMapper = {
   toDomain(row: PrismaProduct): Product {
@@ -15,7 +15,10 @@ export const ProductMapper = {
     });
   },
 
-  toPrismaCreate(entity: Product, storeId: string): Prisma.ProductUncheckedCreateInput {
+  toPrismaCreate(
+    entity: Product,
+    storeId: string,
+  ): Prisma.ProductUncheckedCreateInput {
     const p = entity.toPrimitives();
     return {
       id: p.id,

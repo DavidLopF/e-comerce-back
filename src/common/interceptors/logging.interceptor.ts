@@ -25,7 +25,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
     // Log de la petición entrante
     this.logger.log(
-      `🚀 ${method} ${url} - ${userAgent} ${ip} - Body: ${JSON.stringify(body)} - Query: ${JSON.stringify(query)} - Params: ${JSON.stringify(params)}`
+      `🚀 ${method} ${url} - ${userAgent} ${ip} - Body: ${JSON.stringify(body)} - Query: ${JSON.stringify(query)} - Params: ${JSON.stringify(params)}`,
     );
 
     return next.handle().pipe(
@@ -36,7 +36,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
         // Log de la respuesta
         this.logger.log(
-          `✅ ${method} ${url} ${statusCode} ${contentLength} - ${responseTime}ms`
+          `✅ ${method} ${url} ${statusCode} ${contentLength} - ${responseTime}ms`,
         );
       }),
     );
